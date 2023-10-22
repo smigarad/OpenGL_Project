@@ -19,17 +19,19 @@
 
 #include "drawableObject.h"
 #include "triangle.h"
-#include "shader.h"
-#include "vertexShader.h"
-#include "fragmentShader.h"
 #include "scene.h"
 #include "camera.h"
 #include "controller.h"
 #include "square.h"
 
+
+//shaders
+#include "shader.h"
+#include "vertexShader.h"
+#include "fragmentShader.h"
 //models
-#include "../models/suzi_flat.h"
-#include "../models/suzi_smooth.h"
+
+
 
 //transformation
 #include "transformationComposite.h"
@@ -37,12 +39,13 @@
 #include "translation.h"
 #include "rotate.h"
 #include "scale.h"
+
 class application
 {
 private:
     Camera *camera;
     GLFWwindow *window;
-    Scene *scene;
+    Scene *scene1;
 
 
 public:

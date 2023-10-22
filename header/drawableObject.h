@@ -36,6 +36,8 @@ public:
     DrawableObject(Model* model);
     ~DrawableObject();
     void draw();
+    // void draw(glm::mat4 perspective, glm::mat4 view);
+    ShaderProgram* GetShaderProgramId();
     //poznamky
     //bude mit 1 mdel, jeden shader a jednu transforaci
 };

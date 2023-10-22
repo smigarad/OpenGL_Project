@@ -16,6 +16,18 @@ void DrawableObject::draw(){
     this->model->draw();
 }
 
+// void DrawableObject::draw(glm::mat4 perspective, glm::mat4 view)
+// {
+    
+//     this->shaderProgram->use(this->transformationComposite->getModelMatrix(),view, perspective);
+//     this->model->draw();
+// }
+
+ShaderProgram* DrawableObject::GetShaderProgramId()
+{
+return this->shaderProgram;
+}
+
 DrawableObject::DrawableObject(Model* model, ShaderProgram* shaderProgram){
     this->model = model;
     this->shaderProgram = shaderProgram;

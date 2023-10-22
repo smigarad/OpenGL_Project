@@ -1,4 +1,0 @@
-/home/radek/Work/Programming/rocnik_3/zpg/cv2/build/CMakeFiles/mylibrary.dir
-/home/radek/Work/Programming/rocnik_3/zpg/cv2/build/CMakeFiles/main.dir
-/home/radek/Work/Programming/rocnik_3/zpg/cv2/build/CMakeFiles/edit_cache.dir
-/home/radek/Work/Programming/rocnik_3/zpg/cv2/build/CMakeFiles/rebuild_cache.dir

@@ -6,8 +6,6 @@ application::application()
 
 void application::init()
 {
-
-    camera = new Camera();
     glfwSetErrorCallback(Controller::error_callback);
 
     if (!glfwInit())
@@ -17,11 +15,10 @@ void application::init()
     }
 
     // inicializace konkretni verze
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-    glfwWindowHint(GLFW_OPENGL_PROFILE,
-                   GLFW_OPENGL_CORE_PROFILE); //
+    glfwWindowHint(GLFW_OPENGL_PROFILE,GLFW_OPENGL_CORE_PROFILE); //
 
     window = glfwCreateWindow(800, 600, "ZPG", NULL, NULL);
     if (!window)
@@ -34,7 +31,9 @@ void application::init()
 
     // start GLEW extension handler
     glewExperimental = GL_TRUE;
-    glewInit();
+    if (glewInit() != GLEW_OK) {
+        exit(EXIT_FAILURE);
+    }
     
 
     // get version info
@@ -62,36 +61,47 @@ void application::init()
 
     int width, height;
     glfwGetFramebufferSize(window, &width, &height);
-    float ratio = width / (float)height;
-    glViewport(0, 0, width, height);
 
-    glOrtho(-ratio, ratio, -1.f, 1.f, 1.f, -1.f);
-    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED); // cursor wont leave the window and will be hidden
-    this->scene1 = Scene::makeScene2(this->window);
     glEnable(GL_DEPTH_TEST);
+    this->scene1 = Scene::makeSceneSolarSystem(this->window);
+
+
 }
 
 void application::run()
 {
+    glm::mat4 projection = glm::perspective(glm::radians(45.0f), 4.0f / 3.0f, 0.1f, 100.0f); // musi byt zde kvuli okna
+    glfwSetWindowUserPointer(window, &projection);
+    std::vector<DrawableObject*> objects = this->scene1->objects;
+
+    Rotate *rotation = new Rotate(glm::radians(45.0f), 0.0f, 0.0f, 1.0f);
+    Translation *translation_position = new Translation(0.0f, 1.0f, 0.0f);
+    Translation *translation_start = new Translation(0.0f, -1.0f, 0.0f);
+    // 0.0,0.0,0.0
+    //rotate
+    // 0.0,1.0,0.0
+
+
+    std::vector<Transformation*> transformations = std::vector<Transformation*>{translation_start,rotation,translation_position};
     while (!glfwWindowShouldClose(window))
     {
         // clear color and depth buffer
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         // draw triangles
-        // glm::mat4 projection = this->scene1->camera->getProjection();
-        // glm::mat4 view = this->scene1->camera->getCamera();
-        this->scene1->update();
-        // this->scene1->draw(projection, view);
-        // this->scene1->draw();
+
+        this->scene1->update(projection);
+//        for(auto object : scene1->objects){
+//            object->transformationComposite->apply();
+//        }
+         this->scene1->rotatePlanets();
+        //this->scene1->transformObject(this->scene1->objects[0],transformations);
+
         //  update other events like input handling
-
-
-
         glfwPollEvents();
         // put the stuff we’ve been drawing onto the display
         glfwSwapBuffers(this->window);
     }
-
+    delete rotation;
     glfwDestroyWindow(this->window);
     glfwTerminate();
     exit(EXIT_SUCCESS);
@@ -109,12 +119,7 @@ void application::createScene()
 {
 }
 
-void application::createCamera()
-{
-    this->camera = new Camera();
-}
 application::~application()
 {
-    delete camera;
     delete scene1;
 }

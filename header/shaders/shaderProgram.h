@@ -22,6 +22,7 @@
 #include "../camera.h"
 #include "../light.h"
 #include "../observer.h"
+#include "../material.h"
 
 class Light;
 class Camera;
@@ -33,17 +34,20 @@ private:
     FragmentShader *fragmentShader;
 
 public:
-    Camera *camera;
     ShaderProgram(VertexShader *vertexShader, FragmentShader *fragmentShader);
     ShaderProgram(const char *vertexShaderSource, const char *fragmentShaderSource);
     ShaderProgram();
     ~ShaderProgram();
     void createDefaultShaders();
     void compile();
-    void use(glm::mat4 model);
+    void use(glm::mat4 model,Material* material, glm::vec3 color);
+    void sendUniformValue(glm::mat4 matrix, const std::string& name) const;
+    void sendUniformValue(glm::mat3 matrix, const std::string& name) const;
+    void sendUniformValue(glm::vec3 vector, const std::string& name) const;
+    void sendUniformValue(glm::vec4 vector, const std::string& name) const;
+    void sendUniformValue(float fn, const std::string &name) const;
     // void use(glm::mat4 model, glm::mat4 view, glm::mat4 projection);
     void unuse();
-    GLuint GetVertexShaderID();
     void notify(Subject *subject) override;
 };
 

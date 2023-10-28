@@ -43,7 +43,6 @@
 class application
 {
 private:
-    Camera *camera;
     GLFWwindow *window;
     Scene *scene1;
 

@@ -20,26 +20,27 @@
 #include "shaderProgram.h"
 #include "model.h"
 #include "transformationComposite.h"
+#include "material.h"
 class DrawableObject
 {
 private:
 
     Model* model;
     ShaderProgram *shaderProgram;
+    Material *material;
+    glm::vec3 color;
 public:
 
     TransformationComposite* transformationComposite;
     
-    DrawableObject(float* points, int pointsCount, const char* vertex_shader, const char* fragment_shader);
-    DrawableObject(Model* model, ShaderProgram* shaderProgram);
-    DrawableObject(Model* model, const char* vertex_shader, const char* fragment_shader);
+    DrawableObject(float* points, int pointsCount, const char* vertex_shader, const char* fragment_shader, glm::vec3 color = glm::vec3(1.0f, 1.0f, 1.0f));
+    DrawableObject(Model* model, ShaderProgram* shaderProgram, glm::vec3 color = glm::vec3(1.0f, 1.0f, 1.0f));
+    DrawableObject(Model* model, const char* vertex_shader, const char* fragment_shader, glm::vec3 color = glm::vec3(1.0f, 1.0f, 1.0f));
     DrawableObject(Model* model);
     ~DrawableObject();
     void draw();
-    // void draw(glm::mat4 perspective, glm::mat4 view);
-    ShaderProgram* GetShaderProgramId();
-    //poznamky
-    //bude mit 1 mdel, jeden shader a jednu transforaci
+    void setMaterial(Material *material);
+    void setTransformationComposite(TransformationComposite *transformationComposite);
 };
 
 #endif // DRAWABLE_OBJECT_H

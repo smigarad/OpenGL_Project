@@ -20,6 +20,9 @@ void Controller::window_size_callback(GLFWwindow *window,int width, int height)
 {
     printf("resize %d, %d \n", width, height);
     glViewport(0, 0, width, height);
+
+    glm::mat4 *projection = (glm::mat4*)glfwGetWindowUserPointer(window);
+    *projection = glm::perspective(glm::radians(45.0f), (float)width / (float)height, 0.1f, 100.0f);
 }
 
 void Controller::cursor_callback(GLFWwindow *window,double x, double y) { printf("cursor_callback \n"); }

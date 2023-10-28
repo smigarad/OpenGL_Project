@@ -22,21 +22,37 @@ class Scene
 {
 private:
     GLFWwindow *window;
+
+    float planet1RotationSpeed;
+    float planet2RotationSpeed;
+    float planet3RotationSpeed;
+    float planet4RotationSpeed;
+    float planet5RotationSpeed;
+    float planet6RotationSpeed;
+    float planet7RotationSpeed;
+    float planet8RotationSpeed;
+
 public:
     Camera *camera;
     Light *light;
     std::vector<DrawableObject *> objects;
-    std::vector<ShaderProgram *> shaderPrograms;
     Scene(GLFWwindow *window);
     ~Scene();
     Scene(const char *vertex_shader, const char *fragment_shader);
     void addObject(DrawableObject *object);
     void draw();
-    void update();
-    // void draw(glm::mat4 perspective, glm::mat4 view);
+    void update(glm::mat4 projection);
     static Scene* makeScene1(GLFWwindow *window);
     static Scene* makeScene2(GLFWwindow *window);
-    static Scene* makeScene3(GLFWwindow *window);
+    static Scene* makeSceneSolarSystem(GLFWwindow *window);
+
+    void transformObjects(std::vector<Transformation*> transformations);
+    void transformObject(DrawableObject* object,std::vector<Transformation*> transformations);
+    void transformObject(DrawableObject *object, Transformation *transformation);
+
+    void rotatePlanets();
+
+
 
 };
 

@@ -1,8 +1,5 @@
-
-
 #ifndef SHADER_H
 #define SHADER_H
-
 
 // include GLEW
 #include <GL/glew.h>
@@ -36,7 +33,6 @@ public:
     Shader(const char* source, GLenum shaderType);
     ~Shader();  
     GLuint GetShaderID();
-    void use(glm::mat4 model);
     static Shader* loadFile(const char *fname,GLenum shaderType);
 
 };

@@ -26,12 +26,6 @@ GLuint Shader::GetShaderID()
     return this->shaderID;
 }
 
-void Shader::use(glm::mat4 model)
-{
-    GLint modelLoc = glGetUniformLocation(this->shaderID, "modelMatrix");
-    glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-}
-
 Shader* Shader::loadFile(const char *fname, GLenum shaderType)
 {
 	ifstream file(fname);

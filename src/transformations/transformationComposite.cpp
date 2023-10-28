@@ -8,10 +8,19 @@ TransformationComposite::TransformationComposite()
 
 TransformationComposite::~TransformationComposite()
 {
+    for (auto transformation : this->transformations)
+    {
+        delete transformation;
+    }
 }
 
 glm::mat4 TransformationComposite::getModelMatrix()
 {
+    this->model = glm::mat4(1.f);
+    for (auto transformation : this->transformations)
+    {
+        this->model = this->model * transformation->getModelMatrix();
+    }
     return this->model;
 }
 
@@ -20,10 +29,9 @@ void TransformationComposite::apply()
     for (auto transformation : transformations)
     {
         transformation->apply();
-        this->model = transformation->getModelMatrix() * this->model;
     }
 
-    
+
 }
 
 void TransformationComposite::addTransformation(Transformation* transformation)
@@ -35,4 +43,12 @@ void TransformationComposite::removeTransformation(Transformation* transformatio
 {
     transformations.erase(std::remove(transformations.begin(), transformations.end(), transformation), transformations.end());
 }
+
+void TransformationComposite::reset() {
+    this->model = glm::mat4(1.0f);
+
+}
+
+
+
 

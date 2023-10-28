@@ -1,5 +1,9 @@
-#ifndef MODEL_H
-#define MODEL_H
+//
+// Created by radek on 27.10.23.
+//
+
+#ifndef MATERIAL_H
+#define MATERIAL_H
 
 #include <GL/glew.h>
 
@@ -17,22 +21,14 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-
-class Model
-{
+class Material{
 private:
-
-protected:
-    void createVAO();
-    void createVBO();
-    GLuint VAO = 0;
-    GLuint VBO = 0;
 public:
-    const float *points;
-    int pointsCount;
-    Model(const float *points, int pointsCount);
-    ~Model();
-    virtual void draw();
-};
+    //(r_a, r_d, r_s),
+    float r_a;
+    float r_d;
+    float r_s;
+    Material(float r_a,float r_d, float r_s);
 
-#endif // "MODEL_H"
+};
+#endif //MATERIAL_H

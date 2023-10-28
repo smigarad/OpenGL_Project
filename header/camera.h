@@ -23,11 +23,8 @@ class Shader;
 class Camera : public Subject
 {
 private:
-    /**/
     glm::mat4 projectionMatrix;
-    // Camera matrix
     glm::mat4 viewMatrix;
-    // Model matrix : an identity matrix (model will be at the origin)
     glm::mat4 modelMatrix;
 
     glm::vec3 eye;
@@ -47,10 +44,15 @@ private:
     float lastY;
     bool firstMouse;
     GLFWwindow *window;
+    bool moving;
+    bool pressed;
+    bool mouse_pressed;
+    float camera_last_y;
+    float camera_last_x;
+    bool firstUpdate;
 
 public:
     Camera();
-    // Camera(Shader *shader);
     ~Camera();
     glm::mat4 getProjection();
     glm::mat4 getView();
@@ -58,10 +60,9 @@ public:
     glm::mat4 getCamera();
     void processKeyboard(GLFWwindow *window);
     void processMouse(GLFWwindow *window);
-    void attachShader(Shader *shader);
-    void detachShader(Shader *shader);
     void notifyObservers() override;
-    void update(GLFWwindow *window);
+    void update(GLFWwindow *window,glm::mat4 perspective);
+    glm::vec3 getEye();
 };
 
 #endif // CAMERA_H

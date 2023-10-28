@@ -1,6 +1,6 @@
 #include "light.h"
 
-Light::Light(glm::vec3 position, glm::vec3 color, glm::vec3 ambient)
+Light::Light(glm::vec3 position, glm::vec3 color, glm::vec3 ambient) :Subject()
 {
     this->position = position;
     this->color = color;

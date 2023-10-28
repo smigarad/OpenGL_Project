@@ -38,6 +38,5 @@ void Model::createVBO()
 void Model::draw()
 {
     glBindVertexArray(this->VAO);
-    //printf("pointsCount: %d\n", this->pointsCount / 6 / sizeof(float));
-    glDrawArrays(GL_TRIANGLES, 0, this->pointsCount / 6 / sizeof(float));
+    glDrawArrays(GL_TRIANGLES, 0, this->pointsCount / 3 / sizeof(float));
 }

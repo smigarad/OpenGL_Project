@@ -2,7 +2,7 @@
 #define TRANSFORMATIONCOMPOSITE_H
 
 #include "transformation.h"
-
+#include <typeinfo>
 class TransformationComposite : public Transformation
 {
 private:
@@ -15,7 +15,7 @@ public:
     glm::mat4 getModelMatrix() override;
     void apply() override;
     void removeTransformation(Transformation* transformation);
-    
+    void reset();
 };
 
 #endif // TRANSFORMATIONCOMPOSITE_H

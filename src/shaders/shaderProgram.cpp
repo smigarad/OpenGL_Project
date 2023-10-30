@@ -13,9 +13,15 @@ ShaderProgram::ShaderProgram(VertexShader *vertexShader, FragmentShader *fragmen
     this->compile();
 }
 
-ShaderProgram::ShaderProgram(const char *vertexShaderSource, const char *fragmentShaderSource) {
-    this->vertexShader = VertexShader::loadFromFile(vertexShaderSource);
-    this->fragmentShader = FragmentShader::loadFromFile(fragmentShaderSource);
+ShaderProgram::ShaderProgram(const char *vertexShaderSource, const char *fragmentShaderSource, bool isFile) {
+    if(isFile){
+        this->vertexShader = VertexShader::loadFromFile(vertexShaderSource);
+        this->fragmentShader = FragmentShader::loadFromFile(fragmentShaderSource);
+    }
+    else{
+        this->vertexShader = new VertexShader(vertexShaderSource);
+        this->fragmentShader = new FragmentShader(fragmentShaderSource);
+    }
     this->shaderProgramID = glCreateProgram();
     this->compile();
 }
@@ -80,7 +86,6 @@ void ShaderProgram::use(glm::mat4 model, Material *material, glm::vec3 color) {
         this->sendUniformValue(material->r_a,"r_a");
         this->sendUniformValue(material->r_s,"r_s");
         this->sendUniformValue(material->r_d,"r_a");
-
     }
 
 }
@@ -91,12 +96,6 @@ void ShaderProgram::notify(Subject *subject) {
         this->sendUniformValue(((Camera *) subject)->getCamera(), "viewMatrix");
         this->sendUniformValue(((Camera *) subject)->getProjection(), "projectionMatrix");
         this->sendUniformValue(((Camera *) subject)->getEye(), "camPos");
-//        glm::mat4 matrix = ((Camera*)subject)->getCamera();
-//        printf("Matrix values:\n");
-//        printf("%f, %f, %f, %f\n", matrix[0][0], matrix[0][1], matrix[0][2], matrix[0][3]);
-//        printf("%f, %f, %f, %f\n", matrix[1][0], matrix[1][1], matrix[1][2], matrix[1][3]);
-//        printf("%f, %f, %f, %f\n", matrix[2][0], matrix[2][1], matrix[2][2], matrix[2][3]);
-//        printf("%f, %f, %f, %f\n", matrix[3][0], matrix[3][1], matrix[3][2], matrix[3][3]);
     }
 
     if (typeid(*subject) == typeid(Light)) {
@@ -106,8 +105,8 @@ void ShaderProgram::notify(Subject *subject) {
     }
 }
 
-void ShaderProgram::unuse() {
-    glUseProgram(0);
+void ShaderProgram::use(GLint shaderProgramID) {
+    glUseProgram(shaderProgramID);
 }
 
 void ShaderProgram::sendUniformValue(glm::mat4 matrix, const std::string &name) const {

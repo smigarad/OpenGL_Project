@@ -1,0 +1,130 @@
+Základy počítačové grafiky 2023/2024
+
+Jméno a příjmení: Radek Šmiga
+Login: smi0132
+
+V několika větách popište kde máte ve zdrojovém kódu danou věc (třída, řádek), jak funguje a jaké má výhody/nevýhody. Splněno nechte, jen pokud je vše splněno a funkční, jinak nesplněno.
+
+
+1. Třída ShaderProgram (header/shaders/shaderProgram.h, src/shaders/shaderProgram.cpp)
+----------------------
+  a) splněno
+     Popis: Ve hlavičkovém souboru lze vidět, že na řádku 32 je definovaná proměnná ShaderProgramID. V hlavičkovém souboru lze vidět, že zde na ní není getter.
+
+  b) splněno
+     Popis: Ve hlavičkovém souboru lze vidět, že na řádku 50 je definována funkce use. Ta je deklarováná v .cpp na řádku 108.
+     Obsahuje jenom GLUseProgram();
+
+  c) splněno
+     Popis: Přetížené metody lze videt definované v  hlavičkovém souboru na řádcích 44 - 48. V cpp souboru jsou naimplementovány všechny po sobě (řádky 112 - 140).
+
+  d) splněno
+     Popis: ShaderLoader jsem využil. V .cpp souboru v konstruktoru na řádku 16. Pokud čtu ze souboru, tak se zavolají metody LoadFromFile pro vertex a fragment shader. V metodě LoadFromFile
+     v souborech fragmentShader.cpp lze vidět, že zavolá metodu LoadFile jenž je právě přepsaný ShaderLoader.
+
+
+2. Třída DrawableModel (header/drawableObject.h, src/drawableObject.cpp)
+----------------------
+  a) splněno
+     Popis: v hlavičkové souboru lze vidět všechny požadované věci. Skládá se z modelu, TransformationComposite, ShaderProgramu a barvy. Barva je zde pro testovaní sluneční soustavy.
+     V hlavičkovém souboru lze dále vidět metody jako draw(), setMaterial() a setTransformationComposite().
+
+
+
+3. Transformace (header/transformations/*.h, src/transformations/*.cpp)
+----------------------
+  a) splněno
+     Popis: Ve složce header/transformations lze vidět základní transformace. Pro úplný začátek je zde abstraktní třída Transformation. V ní lze nalézt virtuální metody, které jsou později přepsány.
+     Dále jsou zde třídy rotate, scale, translation a transformationComposite. Všechny tyto třídy dědí z třídy transformation. Jednotlivé transformace můžu skládat pomocí transformationComposite.
+     Ta funguje podle návrhového vzoru Composite. Jak funguje bude více popsané u sluneční soustavy.
+
+  b) nesplněno
+     Popis: Netestoval jsem.
+
+  c) splněno
+     Popis: Splněno na příkladu měsíce, jenž se točí kolem země. To bude více popsáno u sluneční soustavy.
+     Jednoduše řečeno se to dá chápat tak, že provedu transformace pro zemi. Poté vezmu stejné transformace, jenž jsem provedl pro zemi a roznásobím to transformacemi od měsíce.
+     Roznásobení dvou Compositoru.
+
+
+
+  d) splněno
+     Popis: Kompozit lze vidět v souboru header/transformations/transformationComposite.h. Obsahuje vektor transformací (řádek 9) do kterého si ukládá jednotlivé transformace. Obsahuje metody
+     pro přidání a odebrání transformací (řádky 13 a 17). Dúležitou metodou je Apply (řádek 16). V této metodě se vykonají všechny transformace tak, jak byly za sebou přidány.
+     Další důležitou metodou je getModelMatrix (řádek 15). Tato metoda prochází jednotlivé transformace a postupně násobí výsledek metody apply jednotlivých transformací.
+     Viz soubor transformationComposite.cpp, řádek 17 - 25.
+
+
+4. Třída Camera (header/camera.h, src/camera.cpp)
+----------------------
+  a) splněno
+     Popis: Lze s kamerou hýbat pomocí kláves WASD. O tuto funkcionalitu se stará funkce processKeyboard (řádek 61 v hlavičkovém souboru).
+     v cpp můžeme vidět jeho implementaci na řádcích 43 -88. Jednoduše po stistku klávesy upravuji vektor eye, jenž reprezentuje pozici ve
+     světových souřadnicích. Po světových souřadnicích se posunuji dvěma vzorci. První lze vidět na řádku 50 v cpp souboru.
+     Když se pohybuji dopředu nebo dozadu, tak se upravuje pozice kamery (eye). Přesněji se od aktuální pozice odečítá nebo přičítá rychlost vynásobená "směrovým" vektorem.
+     U druhého vzorce na řádku 60 se pozice kamery počítá jako normalizace součinu vektorů UP a Target. Součinem dostaneme nový vektor, který je kolmý na dva předešlé. Poté jej znormalizujeme,
+     abychom počítali s jednotkovým vektorem. Dohromady tento nový jednotkový vektor vynásobím rychlostí kamery a to odečtu nebo přičtu ke stávající pozici.
+
+  b) splněno
+     Popis: Kurzor jsem pojal tak, že vypínám rotaci kamery pomocí pravého tlačítka myši. To lze najít v cpp na řádku 68. Zde je podmínka, která se ptá, zda bylo zmáčknuto pravé tlačítko myši.
+     Pokud bylo, tak se podívá, zda li kamera může rotovat, či nikoliv. Pokud může a já zmáčknu tlačítko, tak již nebudu moct a zapne se kurzor a naopak. Takto je to naimplementováno kvůli držení tlačítka.
+     Lze se rozhlížet pomocí myši. O tuto funkcionalitu se stará funkce processMouse, která začíná na řádku 96 v cpp souboru.
+     prvně si do dvou float proměnných xpos a ypos načtu světové souřadnice kurzoru. Dále se kontrouje, zdali uživatel rotoval kamerou kvůli notifikacím pro ShaderProgramy.
+     Na řádku 93 se kontroluje, zda li se pohybuje myší poprvé kvůli trhnutí myši. Dále se počítá odchylka pozice od poslední známé pozice kurzoru. To se vynásobí sensitivitou, jinak moc moc rychlé.
+     Dále zde figurují proměnné yaw (horizontální otáčení) a pitch (vertikální otáčení). U vertikálního otáčení je kontrola výsledku. Jinak nastává problém, kde target splyne s eye. Poté následuje výpočet
+     a případná notifikace observerů.
+
+
+  c) splněno
+     Popis: Kamera jsem pojal jako subject, jenž notifikuje při inicializaci a pohybu ShaderProgram (observer). Pro přidání observera do kamery slouží metoda addObserver (subject.h, řádek 29). Pro notifikaci zde funguje metoda notifyObserver (camera.cpp, řádek 136).
+     V této metodě posílá sám sebe observeru v metodě notify. Tato metoda v ShaderProgramu poté zpracovává jednotlivé matice kamery (shaderProgram.cpp, řádek 94).
+
+
+5. Třída Light (light.cpp, light.h)
+----------------------
+  a) nesplněno
+     Popis: Reprezentace světla jde vidět v souboru light.h. Propojení se ShaderProgramem ve vztahu subject (light) a observer (shaderProgram).
+
+  b) splněno
+     Popis: Světlo posílá skrze notify metodu samo sebe do ShaderProgramu. Zde ve funkci notify (shaderProgram.cpp, řádek 94) předává fragment shaderu skrze uniformní proměnné své vlastnosti.
+
+6. Třída Material (material.cpp, material.h
+----------------------
+  a) splněno
+     Popis: Třída vytvořena. DrawableObject obsahuje material v sobě.
+
+
+
+Testovací scény
+
+1) Základní test Phongova osvětlovacího modelu. (scene.h, scene.cpp)
+----------------------
+  splněno
+  Popis: Funguje, jak lze vidět na obrázku smi0132_1.png. Nic k popisování. Paprsek se mění v závislosti na pozici kamery.
+  Scénu lze najít na řádku 99 ve scene.cpp.
+
+2) Test na rotaci a jeji skládání. (scene.h, scene.cpp)
+----------------------
+  splněno
+  Popis: Vytvořena scéna s vícero koulemi, jenž rotují kolem středu. Je zde měsíc, jenž rotuje kolem svojí země.
+  Scénu lze najít v souboru scene.cpp na řádku 163. Zde je statická funkce makeSceneSolarSystem. Zde si pouze vytvářím jednotlivé planety.
+  Transformace a jejich skládání dělám ve funkci rotatePlanets (220 řádek). U všech planet provádím transformace způsobem, že si vytvořím composit s transformacemi rotate,translation a scale.
+  Tuto transformaci přidám planetě a tu aplikuji. Každým snímkem zde zvětšuji rychlost otáčení jednotlivých planet a aplikuji nově vytvořené transformace s novou rychlostí rotace.
+  Zajímavější je rotace měsíce kolem země. To v podstatě funguje jako roznásobení matic dvou kompozicí. První vykonám transformace země a ty vynásobím transformacemi měsíce.
+  Tím docílím, že mi měsíc rotuje kolem země.
+
+3) Test na ořezání světla, které nemůže dopadnou na plochu. (scene.h, scene.cpp)
+----------------------
+  splněno
+  Popis: Splněno, jde videt na obrázcích.
+
+4) Test na změnu velikosti obrazovky. (scene.h, scene.cpp)
+----------------------
+  splněno
+  Popis: Funguje, lze vidět na přiložených obrázcích.
+
+5) Testování na více objektů a použití více shaderu ve scéně (procházení lesa).
+----------------------
+  splněno
+  Popis: Vytvářím scénu v scene.cpp v metodě makeSceneForest na řádku 275. Objekty vytvářím zcela náhodně. Jak co se týče počtu objektů, tak velikosti, rotace a pozice.
+  Každý objekt má svůj ShaderProgram. Je to bolestivé a neoptimalizované.

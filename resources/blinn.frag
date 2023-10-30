@@ -22,14 +22,15 @@ void main(void) {
     vec3 viewDir = normalize(camPos - worldPos.xyz);
     vec3 halfwayDir = normalize(lightDir + viewDir);
 
-    float diff = max(dot(lightDir, normalize(worldNorm)), 0.0);
+    float diff = max(dot(lightDir, normalize(worldNorm)));
     vec4 diffuse = diff * vec4(lightColor,1.0);
 
     vec3 reflectDir = reflect(-lightDir, normalize(worldNorm));
-    float spec = pow(max(dot(halfwayDir, reflectDir), 0.0), 32.0);
+    float spec = 0.f;
+    if (dot(lightDir, worldNorm) > 0.0)
+        spec = pow(max(dot(halfwayDir, reflectDir), 0.0), 64.0);
+
     float specularStrength = 0.5;
-
     vec4 specular = specularStrength * spec * vec4(lightColor,1.0);
-
     fragColor = (vec4(lightAmbient,1.0) + diffuse + specular) * vec4(objectColor,1.0f);
 }

@@ -32,12 +32,6 @@ Camera::Camera() : Subject()
 }
 Camera::~Camera()
 {
-    delete this->shader;
-}
-
-glm::mat4 Camera::getModel()
-{
-    return this->modelMatrix;
 }
 
 glm::mat4 Camera::getCamera()
@@ -74,11 +68,11 @@ void Camera::processKeyboard(GLFWwindow *window)
     if(glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_2) == GLFW_PRESS){
 
         if(moving && !mouse_pressed){
-            this->moving = false;
+            this->moving = false; //rotace vypnuta
             glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
         }
         else if(!moving && !mouse_pressed){
-            this->moving = true;
+            this->moving = true; //rotace zapnuta
             glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
         }
         pressed = true;
@@ -91,7 +85,6 @@ void Camera::processKeyboard(GLFWwindow *window)
         this->notifyObservers();
         this->pressed = false;
     }
-
 }
 
 void Camera::processMouse(GLFWwindow *window)
@@ -158,11 +151,6 @@ void Camera::update(GLFWwindow *window,glm::mat4 perspective)
         this->firstUpdate = false;
         this->notifyObservers();
     }
-}
-
-glm::mat4 Camera::getView()
-{
-    return this->viewMatrix;
 }
 
 glm::mat4 Camera::getProjection()

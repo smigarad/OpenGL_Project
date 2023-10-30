@@ -1,15 +1,12 @@
 #include "application.h"
 
-application::application()
-{
+application::application() {
 }
 
-void application::init()
-{
+void application::init() {
     glfwSetErrorCallback(Controller::error_callback);
 
-    if (!glfwInit())
-    {
+    if (!glfwInit()) {
         fprintf(stderr, "ERROR: could not start GLFW3\n");
         exit(EXIT_FAILURE);
     }
@@ -18,11 +15,10 @@ void application::init()
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 6);
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-    glfwWindowHint(GLFW_OPENGL_PROFILE,GLFW_OPENGL_CORE_PROFILE); //
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE); //
 
     window = glfwCreateWindow(800, 600, "ZPG", NULL, NULL);
-    if (!window)
-    {
+    if (!window) {
         glfwTerminate();
         exit(EXIT_FAILURE);
     }
@@ -34,7 +30,7 @@ void application::init()
     if (glewInit() != GLEW_OK) {
         exit(EXIT_FAILURE);
     }
-    
+
 
     // get version info
     printf("OpenGL Version: %s\n", glGetString(GL_VERSION));
@@ -63,63 +59,75 @@ void application::init()
     glfwGetFramebufferSize(window, &width, &height);
 
     glEnable(GL_DEPTH_TEST);
-    this->scene1 = Scene::makeSceneSolarSystem(this->window);
-
-
 }
 
-void application::run()
-{
+void application::run() {
     glm::mat4 projection = glm::perspective(glm::radians(45.0f), 4.0f / 3.0f, 0.1f, 100.0f); // musi byt zde kvuli okna
     glfwSetWindowUserPointer(window, &projection);
-    std::vector<DrawableObject*> objects = this->scene1->objects;
-
-    Rotate *rotation = new Rotate(glm::radians(45.0f), 0.0f, 0.0f, 1.0f);
-    Translation *translation_position = new Translation(0.0f, 1.0f, 0.0f);
-    Translation *translation_start = new Translation(0.0f, -1.0f, 0.0f);
-    // 0.0,0.0,0.0
-    //rotate
-    // 0.0,1.0,0.0
-
-
-    std::vector<Transformation*> transformations = std::vector<Transformation*>{translation_start,rotation,translation_position};
-    while (!glfwWindowShouldClose(window))
-    {
+    this->key = 1;
+    while (!glfwWindowShouldClose(window)) {
         // clear color and depth buffer
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        // draw triangles
-
+        this->showCurrentScene();
         this->scene1->update(projection);
-//        for(auto object : scene1->objects){
-//            object->transformationComposite->apply();
-//        }
-         this->scene1->rotatePlanets();
-        //this->scene1->transformObject(this->scene1->objects[0],transformations);
-
         //  update other events like input handling
         glfwPollEvents();
         // put the stuff we’ve been drawing onto the display
         glfwSwapBuffers(this->window);
     }
-    delete rotation;
     glfwDestroyWindow(this->window);
     glfwTerminate();
     exit(EXIT_SUCCESS);
 }
 
-void application::createShaders()
-{
+void application::showCurrentScene(){
+    //light test
+    if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS)
+        key = 1;
+    //phong
+    if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS)
+        key = 2;
+    //planets
+    if (glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS)
+        key = 3;
+    //forest
+    if (glfwGetKey(window, GLFW_KEY_4) == GLFW_PRESS)
+        key = 4;
+    if (glfwGetKey(window, GLFW_KEY_5) == GLFW_PRESS)
+        key = 5;
+
+
+    switch (key) {
+        case 1:
+            this->scene1 = this->scenes[0];
+            break;
+        case 2:
+            this->scene1 = this->scenes[1];
+            break;
+        case 3:
+            this->scene1 = this->scenes[2];
+            this->scene1->rotatePlanets();
+            break;
+//        case 4:
+//            this->scene1 = this->scenes[3];
+//            break;
+        case 5:
+            this->scene1 = this->scenes[3];
+            break;
+        default:
+            break;
+    }
+
+}
+void application::createScenes() {
+    this->scenes.push_back(Scene::makeSceneLightTest(this->window));
+    this->scenes.push_back(Scene::makeScenePhongTest(this->window));
+    this->scenes.push_back(Scene::makeSceneSolarSystem(this->window));
+    //this->scenes.push_back(Scene::makeSceneForest(this->window));
+    this->scenes.push_back(Scene::makeSceneModifiedPhong(this->window));
 }
 
-void application::createModels()
-{
-}
-
-void application::createScene()
-{
-}
-
-application::~application()
-{
-    delete scene1;
+application::~application() {
+    for(auto scene : this->scenes)
+        delete scene;
 }

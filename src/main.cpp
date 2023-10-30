@@ -18,7 +18,7 @@ int main(void)
 
 	 //Loading scene
     //app->createShaders();   
-    app->createScene();
+    app->createScenes();
     app->run(); //Rendering 
 	delete(app);
 }

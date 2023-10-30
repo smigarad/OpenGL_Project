@@ -35,7 +35,7 @@ private:
 
 public:
     ShaderProgram(VertexShader *vertexShader, FragmentShader *fragmentShader);
-    ShaderProgram(const char *vertexShaderSource, const char *fragmentShaderSource);
+    ShaderProgram(const char *vertexShaderSource, const char *fragmentShaderSource, bool isFile = true);
     ShaderProgram();
     ~ShaderProgram();
     void createDefaultShaders();
@@ -47,7 +47,7 @@ public:
     void sendUniformValue(glm::vec4 vector, const std::string& name) const;
     void sendUniformValue(float fn, const std::string &name) const;
     // void use(glm::mat4 model, glm::mat4 view, glm::mat4 projection);
-    void unuse();
+    void use(GLint shaderProgramID);
     void notify(Subject *subject) override;
 };
 

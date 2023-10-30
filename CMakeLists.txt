@@ -25,9 +25,9 @@ add_executable(main ${MAIN_SOURCES})
 # Include directories for the main executable
 target_include_directories(main PUBLIC "header" "models")
 
-
+find_package(imgui CONFIG REQUIRED)
 # Link the main executable with transformation and shader libraries and other required libraries
-target_link_libraries(main transformationlib shaderlib glfw GL pthread GLEW GLU)
+target_link_libraries(main transformationlib shaderlib glfw GL pthread GLEW GLU )
 
 # Set the output directory for the executable
 set_target_properties(main PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})

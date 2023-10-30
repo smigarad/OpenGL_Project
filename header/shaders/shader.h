@@ -34,7 +34,6 @@ public:
     ~Shader();  
     GLuint GetShaderID();
     static Shader* loadFile(const char *fname,GLenum shaderType);
-
 };
 
 #endif // SHADER_H

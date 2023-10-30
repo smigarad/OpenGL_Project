@@ -30,8 +30,6 @@ private:
     glm::vec3 eye;
     glm::vec3 target;
     glm::vec3 up;
-
-    Shader *shader;
     float yaw;
     float pitch;
     float cameraSpeed;
@@ -55,8 +53,6 @@ public:
     Camera();
     ~Camera();
     glm::mat4 getProjection();
-    glm::mat4 getView();
-    glm::mat4 getModel();
     glm::mat4 getCamera();
     void processKeyboard(GLFWwindow *window);
     void processMouse(GLFWwindow *window);

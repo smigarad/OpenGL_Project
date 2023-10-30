@@ -25,10 +25,8 @@ void main(void) {
     vec4 diffuse = diff * vec4(lightColor,1.0);
 
     vec3 reflectDir = reflect(-lightDir, normalize(worldNorm));
-    float spec = 0.f;
-    if (dot(lightDir, normalize(worldNorm)) > 0.f) {
-        spec = pow(max(dot(viewDir, reflectDir), 0.0),32.0);
-    }
+
+    float spec = pow(dot(viewDir, reflectDir),1);
     float specularStrength = 0.5;
     vec4 specular = specularStrength * spec * vec4(lightColor,1.0);
     fragColor = (vec4(lightAmbient,1.0) + diffuse + specular) * vec4(objectColor, 1.0);

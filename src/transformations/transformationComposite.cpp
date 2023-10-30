@@ -30,8 +30,6 @@ void TransformationComposite::apply()
     {
         transformation->apply();
     }
-
-
 }
 
 void TransformationComposite::addTransformation(Transformation* transformation)

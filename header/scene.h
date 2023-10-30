@@ -12,10 +12,16 @@
 #include "subject.h"
 #include "observer.h"
 #include "shaderProgram.h"
+
+//models
 #include "suzi_flat.h"
 #include "suzi_smooth.h"
 #include "plain.h"
 #include "sphere.h"
+#include "bushes.h"
+#include "tree.h"
+
+#include "time.h"
 #include "light.h"
 
 class Scene
@@ -42,14 +48,11 @@ public:
     void addObject(DrawableObject *object);
     void draw();
     void update(glm::mat4 projection);
-    static Scene* makeScene1(GLFWwindow *window);
-    static Scene* makeScene2(GLFWwindow *window);
+    static Scene* makeSceneLightTest(GLFWwindow *window);
+    static Scene* makeScenePhongTest(GLFWwindow *window);
     static Scene* makeSceneSolarSystem(GLFWwindow *window);
-
-    void transformObjects(std::vector<Transformation*> transformations);
-    void transformObject(DrawableObject* object,std::vector<Transformation*> transformations);
-    void transformObject(DrawableObject *object, Transformation *transformation);
-
+    static Scene* makeSceneForest(GLFWwindow * window);
+    static Scene* makeSceneModifiedPhong(GLFWwindow * window);
     void rotatePlanets();
 
 

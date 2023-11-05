@@ -108,9 +108,9 @@ void application::showCurrentScene(){
             this->scene1 = this->scenes[2];
             this->scene1->rotatePlanets();
             break;
-//        case 4:
-//            this->scene1 = this->scenes[3];
-//            break;
+        case 4:
+            this->scene1 = this->scenes[3];
+            break;
         case 5:
             this->scene1 = this->scenes[3];
             break;
@@ -123,7 +123,7 @@ void application::createScenes() {
     this->scenes.push_back(Scene::makeSceneLightTest(this->window));
     this->scenes.push_back(Scene::makeScenePhongTest(this->window));
     this->scenes.push_back(Scene::makeSceneSolarSystem(this->window));
-    //this->scenes.push_back(Scene::makeSceneForest(this->window));
+    this->scenes.push_back(Scene::makeSceneModifiedLights(this->window));
     this->scenes.push_back(Scene::makeSceneModifiedPhong(this->window));
 }
 

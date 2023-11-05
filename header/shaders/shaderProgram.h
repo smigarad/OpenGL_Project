@@ -20,11 +20,14 @@
 #include "vertexShader.h"
 #include "fragmentShader.h"
 #include "../camera.h"
-#include "../light.h"
+#include "../lights/light.h"
 #include "../observer.h"
 #include "../material.h"
-
+#include "../lights/pointLight.h"
+#include "../lights/dirLight.h"
 class Light;
+class PointLight;
+class DirLight;
 class Camera;
 class ShaderProgram : public Observer
 {
@@ -46,6 +49,7 @@ public:
     void sendUniformValue(glm::vec3 vector, const std::string& name) const;
     void sendUniformValue(glm::vec4 vector, const std::string& name) const;
     void sendUniformValue(float fn, const std::string &name) const;
+    void sendUniformValue(int fn, const std::string &name) const;
     // void use(glm::mat4 model, glm::mat4 view, glm::mat4 projection);
     void use(GLint shaderProgramID);
     void notify(Subject *subject) override;

@@ -162,3 +162,7 @@ glm::vec3 Camera::getEye() {
     return this->eye;
 }
 
+glm::vec3 Camera::getTarget() {
+    return this->target;
+}
+

@@ -83,9 +83,9 @@ void ShaderProgram::use(glm::mat4 model, Material *material, glm::vec3 color) {
     this->sendUniformValue(model,"modelMatrix");
     this->sendUniformValue(color,"objectColor");
     if (material != nullptr) {
-        this->sendUniformValue(material->r_a,"r_a");
-        this->sendUniformValue(material->r_s,"r_s");
-        this->sendUniformValue(material->r_d,"r_a");
+//        this->sendUniformValue(material->r_a,"r_a");
+//        this->sendUniformValue(material->r_s,"r_s");
+//        this->sendUniformValue(material->r_d,"r_a");
     }
 
 }
@@ -96,12 +96,18 @@ void ShaderProgram::notify(Subject *subject) {
         this->sendUniformValue(((Camera *) subject)->getCamera(), "viewMatrix");
         this->sendUniformValue(((Camera *) subject)->getProjection(), "projectionMatrix");
         this->sendUniformValue(((Camera *) subject)->getEye(), "camPos");
+        this->sendUniformValue(((Camera *) subject)->getTarget(), "camTarget");
     }
 
-    if (typeid(*subject) == typeid(Light)) {
+    if (typeid(*subject) == typeid(Light) || typeid(*subject) == typeid(DirLight) || typeid(*subject) == typeid(PointLight)) {
         this->sendUniformValue(((Light *) subject)->getPosition(), "lightPos");
         this->sendUniformValue(((Light *) subject)->getColor(), "lightColor");
         this->sendUniformValue(((Light *) subject)->getAmbient(), "lightAmbient");
+
+        this->sendUniformValue(((Light *) subject)->getConstant(), "constant");
+        this->sendUniformValue(((Light *) subject)->getLinear(), "linear");
+        this->sendUniformValue(((Light *) subject)->getQuadratic(), "quadratic");
+        this->sendUniformValue(((Light *) subject)->getShininess(), "shininess");
     }
 }
 
@@ -136,5 +142,11 @@ void ShaderProgram::sendUniformValue(glm::vec4 vector, const std::string &name) 
 void ShaderProgram::sendUniformValue(float fn, const std::string &name) const {
     GLint location = glGetUniformLocation(this->shaderProgramID, name.c_str());
     glUseProgram(this->shaderProgramID);
-    glUniform1f(this->shaderProgramID,location);
+    glUniform1f(location, fn);
+}
+
+void ShaderProgram::sendUniformValue(int fn, const string &name) const {
+    GLint location = glGetUniformLocation(this->shaderProgramID, name.c_str());
+    glUseProgram(this->shaderProgramID);
+    glUniform1i(location, fn);
 }

@@ -3,7 +3,6 @@
 Model::Model(const float *points, int pointsCount)
 {
     this->pointsCount = pointsCount;
-    printf("pointsCount: %d\n", this->pointsCount);
     this->points = points;
     this->createVBO();
     this->createVAO();

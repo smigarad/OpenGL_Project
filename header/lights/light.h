@@ -17,8 +17,15 @@
 // Include the standard C++ headers
 #include <stdlib.h>
 #include <stdio.h>
-#include "subject.h"
+#include "../subject.h"
 #include <algorithm>
+
+enum LightType
+{
+    DIRECTIONAL,
+    POINT,
+    SPOTLIGHT
+};
 
 class Light : public Subject
 {
@@ -27,17 +34,29 @@ class Light : public Subject
     glm::vec3 color;
     glm::vec3 ambient;
 
+    float constant;
+    float linear;
+    float quadratic;
+    float shininess;
+
     public:
     Light(glm::vec3 position, glm::vec3 color, glm::vec3 ambient);
+    LightType type;
     ~Light();
 
     glm::vec3 getPosition();
     glm::vec3 getColor();
     glm::vec3 getAmbient();
-
+    float getConstant();
+    float getLinear();
+    float getQuadratic();
+    float getShininess();
     void setPosition(glm::vec3 position);
     void setColor(glm::vec3 color);
     void setAmbient(glm::vec3 ambient);
-    
+    void setConstant(float constant);
+    void setLinear(float linear);
+    void setQuadratic(float quadratic);
+    void setShininess(float shininess);
 };
 #endif // H_LIGHT

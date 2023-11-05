@@ -59,6 +59,7 @@ public:
     void notifyObservers() override;
     void update(GLFWwindow *window,glm::mat4 perspective);
     glm::vec3 getEye();
+    glm::vec3 getTarget();
 };
 
 #endif // CAMERA_H

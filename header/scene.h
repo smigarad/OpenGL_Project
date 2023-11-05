@@ -22,7 +22,10 @@
 #include "tree.h"
 
 #include "time.h"
-#include "light.h"
+#include "lights/light.h"
+#include "lights/pointLight.h"
+#include "lights/dirLight.h"
+#include "lights/spotlight.h"
 
 class Scene
 {
@@ -41,6 +44,7 @@ private:
 public:
     Camera *camera;
     Light *light;
+    std::vector<Light*>lights;
     std::vector<DrawableObject *> objects;
     Scene(GLFWwindow *window);
     ~Scene();
@@ -53,6 +57,7 @@ public:
     static Scene* makeSceneSolarSystem(GLFWwindow *window);
     static Scene* makeSceneForest(GLFWwindow * window);
     static Scene* makeSceneModifiedPhong(GLFWwindow * window);
+    static Scene* makeSceneModifiedLights(GLFWwindow * window);
     void rotatePlanets();
 
 

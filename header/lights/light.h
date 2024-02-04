@@ -42,6 +42,7 @@ class Light : public Subject
     public:
     Light(glm::vec3 position, glm::vec3 color, glm::vec3 ambient);
     LightType type;
+    int id;
     ~Light();
 
     glm::vec3 getPosition();

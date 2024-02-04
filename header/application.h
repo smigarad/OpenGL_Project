@@ -30,13 +30,16 @@ private:
     Scene *scene1;
     std::vector<Scene*>scenes;
     int key;
-
+    int width;
+    int height;
     void showCurrentScene();
+    Controller* controller;
 public:
     void init();
     void run();
     void createScenes();
     application();
+    application(int width, int height);
     ~application();
 };
 

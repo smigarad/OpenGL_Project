@@ -6,6 +6,9 @@ project(ZPG)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_FLAGS "-Wall -fsanitize=address")
 
+# Find pkg-config
+include_directories(/usr/include)
+
 # Transformation library
 file(GLOB TRANSFORMATION_SOURCES "src/transformations/*.cpp")
 add_library(transformationlib STATIC ${TRANSFORMATION_SOURCES})
@@ -28,11 +31,11 @@ file(GLOB MAIN_SOURCES "src/*.cpp")
 add_executable(main ${MAIN_SOURCES})
 
 # Include directories for the main executable
-target_include_directories(main PUBLIC "header" "models" )
+target_include_directories(main PUBLIC "header" "models_h" ${STB_INCLUDE_DIRS} )
 
-find_package(imgui CONFIG REQUIRED)
+#find_package(imgui CONFIG REQUIRED)
 # Link the main executable with transformation and shader libraries and other required libraries
-target_link_libraries(main transformationlib lightlib shaderlib  glfw GL pthread GLEW GLU )
+target_link_libraries(main transformationlib lightlib shaderlib ${STB_INCLUDE_DIRS} glfw GL pthread GLEW GLU  assimp)
 
 # Set the output directory for the executable
 set_target_properties(main PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})

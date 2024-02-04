@@ -77,3 +77,4 @@ void Light::setShininess(float shininess) {
     this->shininess = shininess;
 }
 
+

@@ -25,9 +25,11 @@
 #include "../material.h"
 #include "../lights/pointLight.h"
 #include "../lights/dirLight.h"
+#include "../lights/spotlight.h"
 class Light;
 class PointLight;
 class DirLight;
+class Spotlight;
 class Camera;
 class ShaderProgram : public Observer
 {
@@ -38,7 +40,7 @@ private:
 
 public:
     ShaderProgram(VertexShader *vertexShader, FragmentShader *fragmentShader);
-    ShaderProgram(const char *vertexShaderSource, const char *fragmentShaderSource, bool isFile = true);
+    ShaderProgram(const char *vertexShaderSource, const char *fragmentShaderSource, bool isFile = true, bool texture = false);
     ShaderProgram();
     ~ShaderProgram();
     void createDefaultShaders();
@@ -50,6 +52,7 @@ public:
     void sendUniformValue(glm::vec4 vector, const std::string& name) const;
     void sendUniformValue(float fn, const std::string &name) const;
     void sendUniformValue(int fn, const std::string &name) const;
+    void sendUniformValue(unsigned int fn, const std::string &name) const;
     // void use(glm::mat4 model, glm::mat4 view, glm::mat4 projection);
     void use(GLint shaderProgramID);
     void notify(Subject *subject) override;

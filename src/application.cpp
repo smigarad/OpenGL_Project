@@ -1,10 +1,13 @@
 #include "application.h"
 
 application::application() {
+    this->width = 1600;
+    this->height = 900;
+    this->controller = new Controller();
 }
 
 void application::init() {
-    glfwSetErrorCallback(Controller::error_callback);
+    glfwSetErrorCallback(controller->error_callback_static);
 
     if (!glfwInit()) {
         fprintf(stderr, "ERROR: could not start GLFW3\n");
@@ -17,13 +20,14 @@ void application::init() {
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE); //
 
-    window = glfwCreateWindow(800, 600, "ZPG", NULL, NULL);
+    window = glfwCreateWindow(width, height, "ZPG", NULL, NULL);
     if (!window) {
         glfwTerminate();
         exit(EXIT_FAILURE);
     }
     glfwMakeContextCurrent(window);
     glfwSwapInterval(1);
+    glfwSetWindowSizeCallback(window, controller->window_size_callback_static);
 
     // start GLEW extension handler
     glewExperimental = GL_TRUE;
@@ -43,32 +47,36 @@ void application::init() {
     printf("Using GLFW %i.%i.%i\n", major, minor, revision);
 
     // Sets the key callback
-    glfwSetKeyCallback(window, Controller::key_callback);
+    glfwSetKeyCallback(window, Controller::key_callback_static);
 
     // glfwSetCursorPosCallback(window, this->camera->ProcessMouse);
 
-    glfwSetMouseButtonCallback(window, Controller::button_callback);
+//    glfwSetMouseButtonCallback(window, Controller::button_callback_static);
 
-    glfwSetWindowFocusCallback(window, Controller::window_focus_callback);
+    glfwSetWindowFocusCallback(window, Controller::window_focus_callback_static);
 
-    glfwSetWindowIconifyCallback(window, Controller::window_iconify_callback);
+    glfwSetWindowIconifyCallback(window, Controller::window_iconify_callback_static);
 
-    glfwSetWindowSizeCallback(window, Controller::window_size_callback);
 
-    int width, height;
-    glfwGetFramebufferSize(window, &width, &height);
 
+    glfwGetFramebufferSize(window, &this->width, &this->height);
+    glfwSetInputMode(window, GLFW_STICKY_MOUSE_BUTTONS, GLFW_TRUE);
     glEnable(GL_DEPTH_TEST);
+    glEnable(GL_STENCIL_TEST);
+    glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
 }
 
 void application::run() {
-    glm::mat4 projection = glm::perspective(glm::radians(45.0f), 4.0f / 3.0f, 0.1f, 100.0f); // musi byt zde kvuli okna
+    glm::mat4 projection = glm::perspective(glm::radians(45.0f), 4.0f / 3.0f, 0.1f, 1000.0f); // musi byt zde kvuli okna
     glfwSetWindowUserPointer(window, &projection);
     this->key = 1;
     while (!glfwWindowShouldClose(window)) {
         // clear color and depth buffer
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+//        glClearStencil(0);
         this->showCurrentScene();
+        this->scene1->handleInput();
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+//        this->scene1.skybox->draw(projection);
         this->scene1->update(projection);
         //  update other events like input handling
         glfwPollEvents();
@@ -95,6 +103,8 @@ void application::showCurrentScene(){
         key = 4;
     if (glfwGetKey(window, GLFW_KEY_5) == GLFW_PRESS)
         key = 5;
+    if (glfwGetKey(window, GLFW_KEY_6) == GLFW_PRESS)
+        key = 6;
 
 
     switch (key) {
@@ -112,7 +122,10 @@ void application::showCurrentScene(){
             this->scene1 = this->scenes[3];
             break;
         case 5:
-            this->scene1 = this->scenes[3];
+            this->scene1 = this->scenes[4];
+            break;
+        case 6:
+            this->scene1 = this->scenes[5];
             break;
         default:
             break;
@@ -125,9 +138,17 @@ void application::createScenes() {
     this->scenes.push_back(Scene::makeSceneSolarSystem(this->window));
     this->scenes.push_back(Scene::makeSceneModifiedLights(this->window));
     this->scenes.push_back(Scene::makeSceneModifiedPhong(this->window));
+    this->scenes.push_back(Scene::makeFinalScene(this->window));
 }
 
 application::~application() {
     for(auto scene : this->scenes)
         delete scene;
+    delete this->controller;
+}
+
+application::application(int width, int height) {
+    this->width = width;
+    this->height = height;
+    this->controller = new Controller();
 }

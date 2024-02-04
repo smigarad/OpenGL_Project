@@ -25,7 +25,7 @@ class Camera : public Subject
 private:
     glm::mat4 projectionMatrix;
     glm::mat4 viewMatrix;
-    glm::mat4 modelMatrix;
+//    glm::mat4 modelMatrix;
 
     glm::vec3 eye;
     glm::vec3 target;
@@ -42,19 +42,24 @@ private:
     float lastY;
     bool firstMouse;
     GLFWwindow *window;
-    bool moving;
     bool pressed;
     bool mouse_pressed;
     float camera_last_y;
     float camera_last_x;
     bool firstUpdate;
+    bool lock;
 
+    bool right;
+    bool left;
 public:
     Camera();
     ~Camera();
     glm::mat4 getProjection();
     glm::mat4 getCamera();
+    bool moving;
     void processKeyboard(GLFWwindow *window);
+    glm::mat4 getViewMatrix();
+    glm::mat4 getProjectionMatrix();
     void processMouse(GLFWwindow *window);
     void notifyObservers() override;
     void update(GLFWwindow *window,glm::mat4 perspective);

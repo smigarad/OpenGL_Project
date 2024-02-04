@@ -13,7 +13,7 @@ ShaderProgram::ShaderProgram(VertexShader *vertexShader, FragmentShader *fragmen
     this->compile();
 }
 
-ShaderProgram::ShaderProgram(const char *vertexShaderSource, const char *fragmentShaderSource, bool isFile) {
+ShaderProgram::ShaderProgram(const char *vertexShaderSource, const char *fragmentShaderSource, bool isFile, bool texture) {
     if(isFile){
         this->vertexShader = VertexShader::loadFromFile(vertexShaderSource);
         this->fragmentShader = FragmentShader::loadFromFile(fragmentShaderSource);
@@ -98,8 +98,9 @@ void ShaderProgram::notify(Subject *subject) {
         this->sendUniformValue(((Camera *) subject)->getEye(), "camPos");
         this->sendUniformValue(((Camera *) subject)->getTarget(), "camTarget");
     }
-
-    if (typeid(*subject) == typeid(Light) || typeid(*subject) == typeid(DirLight) || typeid(*subject) == typeid(PointLight)) {
+       //print type of subject
+//       cout << typeid(*subject).name() << endl;
+    if (typeid(*subject) == typeid(Light) || typeid(*subject) == typeid(DirLight) || typeid(*subject) == typeid(PointLight) || typeid(*subject) == typeid(Spotlight)) {
         this->sendUniformValue(((Light *) subject)->getPosition(), "lightPos");
         this->sendUniformValue(((Light *) subject)->getColor(), "lightColor");
         this->sendUniformValue(((Light *) subject)->getAmbient(), "lightAmbient");
@@ -108,7 +109,34 @@ void ShaderProgram::notify(Subject *subject) {
         this->sendUniformValue(((Light *) subject)->getLinear(), "linear");
         this->sendUniformValue(((Light *) subject)->getQuadratic(), "quadratic");
         this->sendUniformValue(((Light *) subject)->getShininess(), "shininess");
+
+        std::string baseUniform = "lights[" + std::to_string(((Light*)subject)->id) + "].";
+//        cout<<baseUniform<<endl;
+        this->sendUniformValue(((Light*)subject)->type, baseUniform + "type");
+        this->sendUniformValue(((Light*)subject)->getColor(), baseUniform + "color");
+        this->sendUniformValue(((Light*)subject)->getAmbient(), baseUniform + "ambient");
+        if (typeid(*subject) == typeid(DirLight)){
+            this->sendUniformValue(((DirLight *) subject)->direction, baseUniform + "direction");
+        }
+        if (typeid(*subject) == typeid(PointLight)){
+            this->sendUniformValue(((PointLight *) subject)->getPosition(), baseUniform + "position");
+            this->sendUniformValue(((PointLight *) subject)->constant, baseUniform + "constant");
+            this->sendUniformValue(((PointLight *) subject)->linear, baseUniform + "linear");
+            this->sendUniformValue(((PointLight *) subject)->quadratic, baseUniform + "quadratic");
+        }
+        if (typeid(*subject) == typeid(Spotlight)){
+            this->sendUniformValue(true, "cameraSpotlight");
+            this->sendUniformValue(((Spotlight *) subject)->getPosition(), baseUniform + "position");
+            this->sendUniformValue(((Spotlight *) subject)->direction, baseUniform + "direction");
+            this->sendUniformValue(((Spotlight *) subject)->getConstant(), baseUniform + "constant");
+            this->sendUniformValue(((Spotlight *) subject)->getLinear(), baseUniform + "linear");
+            this->sendUniformValue(((Spotlight *) subject)->getQuadratic(), baseUniform + "quadratic");
+            this->sendUniformValue(((Spotlight *) subject)->cutOff, baseUniform + "cutOff");
+            this->sendUniformValue(((Spotlight *) subject)->outerCutOff, baseUniform + "outerCutOff");
+        }
     }
+
+
 }
 
 void ShaderProgram::use(GLint shaderProgramID) {
@@ -149,4 +177,11 @@ void ShaderProgram::sendUniformValue(int fn, const string &name) const {
     GLint location = glGetUniformLocation(this->shaderProgramID, name.c_str());
     glUseProgram(this->shaderProgramID);
     glUniform1i(location, fn);
+}
+
+void ShaderProgram::sendUniformValue(unsigned int fn, const string &name) const {
+    GLint location = glGetUniformLocation(this->shaderProgramID, name.c_str());
+    glUseProgram(this->shaderProgramID);
+    glUniform1ui(location, fn);
+
 }

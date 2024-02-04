@@ -26,16 +26,18 @@ class DrawableObject
 private:
 
     Model* model;
-    ShaderProgram *shaderProgram;
     Material *material;
     glm::vec3 color;
+    static unsigned int idCounter;
 public:
+    ShaderProgram *shaderProgram;
 
     TransformationComposite* transformationComposite;
-    
+    unsigned int id;
     DrawableObject(float* points, int pointsCount, const char* vertex_shader, const char* fragment_shader, glm::vec3 color = glm::vec3(1.0f, 1.0f, 1.0f));
     DrawableObject(Model* model, ShaderProgram* shaderProgram, glm::vec3 color = glm::vec3(1.0f, 1.0f, 1.0f));
     DrawableObject(Model* model, const char* vertex_shader, const char* fragment_shader, glm::vec3 color = glm::vec3(1.0f, 1.0f, 1.0f));
+    DrawableObject(Model* model, ShaderProgram* shaderProgram, Material *material, glm::vec3 color = glm::vec3(1.0f, 1.0f, 1.0f));
     DrawableObject(Model* model);
     ~DrawableObject();
     void draw();

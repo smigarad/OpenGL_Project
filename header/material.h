@@ -4,7 +4,6 @@
 
 #ifndef MATERIAL_H
 #define MATERIAL_H
-
 #include <GL/glew.h>
 
 // Include GLFW
@@ -20,7 +19,9 @@
 // Include the standard C++ headers
 #include <stdlib.h>
 #include <stdio.h>
-
+#include <stb/stb_image.h>
+#include <string>
+#include <iostream>
 class Material{
 private:
 public:
@@ -28,7 +29,11 @@ public:
     float r_a;
     float r_d;
     float r_s;
+    unsigned int textureId;
     Material(float r_a,float r_d, float r_s);
-
+    Material(float r_a,float r_d, float r_s, const char* texturePath);
+    void loadTexture(const char* texturePath);
+    ~Material();
+    void bind();
 };
 #endif //MATERIAL_H
